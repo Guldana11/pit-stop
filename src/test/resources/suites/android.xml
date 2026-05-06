@@ -6,7 +6,7 @@
     </listeners>
     <test name="Android smoke">
         <classes>
-            <!-- TODO: добавь сюда тестовые классы из пакета tests -->
+            <class name="tests.SmokeTest"/>                 <!-- запуск приложения -->
         </classes>
     </test>
 </suite>
