@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Android Suite" verbose="1">
+    <listeners>
+        <listener class-name="core.RetryListener"/>
+    </listeners>
+    <test name="Android smoke">
+        <classes>
+            <!-- TODO: добавь сюда тестовые классы из пакета tests -->
+        </classes>
+    </test>
+</suite>
