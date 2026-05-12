@@ -32,6 +32,9 @@ public final class DriverFactory {
         opts.setCapability("appium:appWaitDuration", 30000);
         opts.setCapability("appium:uiautomator2ServerLaunchTimeout", 60000);
         opts.setCapability("appium:uiautomator2ServerInstallTimeout", 60000);
+        // Compromise between default (10s — too long, splash never idles) and 0 — too aggressive,
+        // accessibility polling kept the app's main thread busy and triggered ANRs.
+        opts.setCapability("appium:waitForIdleTimeout", 2000);
 
         String pv = Config.get("platform.version");
         if (pv != null && !pv.isBlank()) opts.setPlatformVersion(pv);

@@ -30,6 +30,11 @@ public abstract class BaseTest {
         uninstallAndroidApp();
         driver = DriverFactory.create();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+        dismissSystemErrorDialogs();
+    }
+
+    private void dismissSystemErrorDialogs() {
+        SystemDialogs.dismissAnrIfPresent(driver);
     }
 
     private void uninstallAndroidApp() {
