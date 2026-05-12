@@ -34,9 +34,9 @@ public class InvitePage extends BasePage {
     }
 
     public boolean waitForDisplayed(Duration timeout) {
-        if (waitOnce(timeout)) return true;
-        if (SystemDialogs.dismissAnrIfPresent(driver)) {
-            return waitOnce(timeout);
+        for (int attempt = 0; attempt < 3; attempt++) {
+            if (waitOnce(timeout)) return true;
+            if (SystemDialogs.dismissAllAnrs(driver, 5) == 0) return false;
         }
         return false;
     }

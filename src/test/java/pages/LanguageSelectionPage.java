@@ -1,5 +1,6 @@
 package pages;
 
+import core.SystemDialogs;
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.WebDriverException;
@@ -40,9 +41,15 @@ public class LanguageSelectionPage extends BasePage {
     }
 
     public boolean waitForDisplayed(Duration timeout) {
+        for (int attempt = 0; attempt < 3; attempt++) {
+            if (waitOnce(timeout)) return true;
+            if (SystemDialogs.dismissAllAnrs(driver, 5) == 0) return false;
+        }
+        return false;
+    }
+
+    private boolean waitOnce(Duration timeout) {
         try {
-            // Ignore WebDriverException so AccessibilityNodeInfo timeouts during splash
-            // animation don't abort the whole wait — they're transient.
             new WebDriverWait(driver, timeout)
                     .ignoring(WebDriverException.class)
                     .until(d -> !d.findElements(AppiumBy.id(BUTTON_RUSSIAN_ID)).isEmpty()
@@ -54,12 +61,13 @@ public class LanguageSelectionPage extends BasePage {
     }
 
     public void selectLanguage(Language language) {
-        // Wait for the screen first. Fail fast if it never appears — otherwise
-        // elementToBeClickable would waste another 30s on a non-existent element.
         if (!waitForDisplayed(Duration.ofSeconds(60))) {
             throw new RuntimeException("Language selection screen did not appear within 60s — "
                     + "app may be stuck on splash or showing a system error dialog");
         }
+        // ANR may have appeared on top after waitForDisplayed succeeded — dismiss it
+        // before trying to click, otherwise the language buttons stay non-clickable.
+        SystemDialogs.dismissAllAnrs(driver, 5);
         WebElement button = new WebDriverWait(driver, Duration.ofSeconds(30))
                 .ignoring(WebDriverException.class)
                 .until(ExpectedConditions.elementToBeClickable(AppiumBy.id(language.buttonId)));

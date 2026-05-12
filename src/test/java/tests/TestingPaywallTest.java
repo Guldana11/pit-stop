@@ -7,12 +7,11 @@ import org.testng.annotations.Test;
 import pages.LanguageSelectionPage;
 import pages.LanguageSelectionPage.Language;
 import pages.MainScreenPage;
-import pages.TestingPage;
 import pages.TestingPaywallDialog;
 
 /**
  * Тесты paywall-диалога, который показывается при тапе на "Тестирование":
- * проверяет содержимое сообщения и обе действия (ОТМЕНА → Testing, ПРИГЛАСИТЬ → Invite).
+ * проверяет содержимое сообщения и обе действия (ОТМЕНА → возврат на Main, ПРИГЛАСИТЬ → Invite).
  */
 public class TestingPaywallTest extends BaseTest {
 
@@ -53,10 +52,10 @@ public class TestingPaywallTest extends BaseTest {
         Assert.assertTrue(paywall.inviteButton().isEnabled(), "Invite button should be enabled");
     }
 
-    @Test(description = "Tapping ОТМЕНА opens the Testing page")
-    public void tappingCancelOpensTestingPage() {
-        TestingPage testing = paywall.tapCancel();
-        Assert.assertTrue(testing.isDisplayed(),
-                "Testing page should appear after dismissing paywall");
+    @Test(description = "Tapping ОТМЕНА closes paywall and returns to the Main screen")
+    public void tappingCancelReturnsToMain() {
+        MainScreenPage main = paywall.tapCancel();
+        Assert.assertTrue(main.isDisplayed(),
+                "Main screen should appear after dismissing paywall");
     }
 }

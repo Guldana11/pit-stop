@@ -18,6 +18,25 @@ public final class SystemDialogs {
     private SystemDialogs() {}
 
     /**
+     * Dismisses ANR dialogs in a loop — x86_64 emulator can pop them up several times
+     * in a row right after dismissal. Returns the number of dialogs dismissed.
+     */
+    public static int dismissAllAnrs(AppiumDriver driver, int maxAttempts) {
+        int dismissed = 0;
+        for (int i = 0; i < maxAttempts; i++) {
+            if (!dismissAnrIfPresent(driver)) break;
+            dismissed++;
+            try {
+                Thread.sleep(800);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
+            }
+        }
+        return dismissed;
+    }
+
+    /**
      * Dismisses an ANR dialog if present. Returns true if a dialog was dismissed.
      */
     public static boolean dismissAnrIfPresent(AppiumDriver driver) {

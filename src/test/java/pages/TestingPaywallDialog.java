@@ -10,9 +10,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 
 /**
- * Paywall-диалог, который показывается после тапа на "Тестирование" с главного экрана.
+ * Paywall-диалог, который показывается после первого тапа на "Тестирование" с главного экрана.
  * Содержит описание ограничений (3 теста / 3 дня / 5 друзей) и две кнопки:
- * "ОТМЕНА" (закрывает диалог → ведёт на экран Тестирование с лимитами)
+ * "ОТМЕНА" (закрывает диалог → возвращает на главный экран)
  * и "ПРИГЛАСИТЬ" (ведёт на экран invite).
  */
 public class TestingPaywallDialog extends BasePage {
@@ -25,13 +25,13 @@ public class TestingPaywallDialog extends BasePage {
     }
 
     public boolean isShown() {
-        return waitForShown(Duration.ofSeconds(15));
+        return waitForShown(Duration.ofSeconds(30));
     }
 
     public boolean waitForShown(Duration timeout) {
-        if (waitOnce(timeout)) return true;
-        if (SystemDialogs.dismissAnrIfPresent(driver)) {
-            return waitOnce(timeout);
+        for (int attempt = 0; attempt < 3; attempt++) {
+            if (waitOnce(timeout)) return true;
+            if (SystemDialogs.dismissAllAnrs(driver, 5) == 0) return false;
         }
         return false;
     }
@@ -56,9 +56,9 @@ public class TestingPaywallDialog extends BasePage {
         return !driver.findElements(AppiumBy.androidUIAutomator(selector)).isEmpty();
     }
 
-    public TestingPage tapCancel() {
+    public MainScreenPage tapCancel() {
         cancelButton().click();
-        return new TestingPage(driver);
+        return new MainScreenPage(driver);
     }
 
     public InvitePage tapInvite() {

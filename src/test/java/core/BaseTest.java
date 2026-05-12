@@ -34,7 +34,7 @@ public abstract class BaseTest {
     }
 
     private void dismissSystemErrorDialogs() {
-        SystemDialogs.dismissAnrIfPresent(driver);
+        SystemDialogs.dismissAllAnrs(driver, 3);
     }
 
     private void uninstallAndroidApp() {

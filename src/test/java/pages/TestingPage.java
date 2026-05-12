@@ -32,13 +32,14 @@ public class TestingPage extends BasePage {
     }
 
     public boolean isDisplayed() {
-        return waitForDisplayed(Duration.ofSeconds(30));
+        return waitForDisplayed(Duration.ofSeconds(60));
     }
 
     public boolean waitForDisplayed(Duration timeout) {
-        if (waitOnce(timeout)) return true;
-        if (SystemDialogs.dismissAnrIfPresent(driver)) {
-            return waitOnce(timeout);
+        // ANR can reappear several times on a slow x86_64 emulator — loop up to 3 rounds.
+        for (int attempt = 0; attempt < 3; attempt++) {
+            if (waitOnce(timeout)) return true;
+            if (SystemDialogs.dismissAllAnrs(driver, 5) == 0) return false;
         }
         return false;
     }

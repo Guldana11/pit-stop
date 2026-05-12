@@ -39,10 +39,9 @@ public class MainScreenPage extends BasePage {
     }
 
     public boolean waitForDisplayed(Duration timeout) {
-        if (waitOnce(timeout)) return true;
-        // Если экран не появился — возможно появился ANR-диалог. Дисмиссим и пробуем снова.
-        if (SystemDialogs.dismissAnrIfPresent(driver)) {
-            return waitOnce(timeout);
+        for (int attempt = 0; attempt < 3; attempt++) {
+            if (waitOnce(timeout)) return true;
+            if (SystemDialogs.dismissAllAnrs(driver, 5) == 0) return false;
         }
         return false;
     }
@@ -98,6 +97,15 @@ public class MainScreenPage extends BasePage {
     public TestingPaywallDialog tapQuestions() {
         questionsButton().click();
         return new TestingPaywallDialog(driver);
+    }
+
+    /**
+     * Второй тап на "Тестирование" после того, как paywall уже был дисмиссен — открывает
+     * непосредственно экран Тестирование, без повторного показа paywall.
+     */
+    public TestingPage tapQuestionsExpectingTestingPage() {
+        questionsButton().click();
+        return new TestingPage(driver);
     }
 
     public WebElement advicesButton()   { return driver.findElement(AppiumBy.id(BTN_ADVICES_ID)); }

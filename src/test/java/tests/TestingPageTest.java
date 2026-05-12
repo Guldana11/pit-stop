@@ -26,10 +26,14 @@ public class TestingPageTest extends BaseTest {
         MainScreenPage main = new MainScreenPage(driver);
         Assert.assertTrue(main.isDisplayed(), "Main screen must be open");
 
+        // Первый тап на "Тестирование" показывает paywall. ОТМЕНА на нём
+        // возвращает на главный экран. Второй тап открывает уже сам экран Тестирование.
         TestingPaywallDialog paywall = main.tapQuestions();
         Assert.assertTrue(paywall.isShown(), "Testing paywall must be shown");
+        main = paywall.tapCancel();
+        Assert.assertTrue(main.isDisplayed(), "Main screen must be back after dismissing paywall");
 
-        testing = paywall.tapCancel();
+        testing = main.tapQuestionsExpectingTestingPage();
         Assert.assertTrue(testing.isDisplayed(),
                 "Testing page must be open before each TestingPage test");
     }
