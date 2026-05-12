@@ -109,7 +109,17 @@ public class MainScreenPage extends BasePage {
     }
 
     public WebElement advicesButton()   { return driver.findElement(AppiumBy.id(BTN_ADVICES_ID)); }
+
+    public AdvicesNotificationDialog tapAdvices() {
+        advicesButton().click();
+        return new AdvicesNotificationDialog(driver);
+    }
     public WebElement profileButton()   { return driver.findElement(AppiumBy.id(BTN_PROFILE_ID)); }
+
+    public ProfilePage tapProfile() {
+        profileButton().click();
+        return new ProfilePage(driver);
+    }
     public WebElement instagramButton() { return driver.findElement(AppiumBy.id(BTN_INSTAGRAM_ID)); }
 
     public boolean hasText(String text) {
