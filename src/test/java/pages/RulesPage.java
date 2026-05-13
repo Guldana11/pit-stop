@@ -100,4 +100,15 @@ public class RulesPage extends BasePage {
     public WebElement searchButton() {
         return driver.findElement(AppiumBy.id(SEARCH_ID));
     }
+
+    public RuleChapterPage tapChapter(String title) {
+        String selector = String.format("new UiSelector().text(\"%s\")", title);
+        driver.findElement(AppiumBy.androidUIAutomator(selector)).click();
+        return new RuleChapterPage(driver);
+    }
+
+    public RulesSearchPage tapSearch() {
+        searchButton().click();
+        return new RulesSearchPage(driver);
+    }
 }

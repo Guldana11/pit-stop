@@ -58,4 +58,11 @@ public class TestingPaywallTest extends BaseTest {
         Assert.assertTrue(main.isDisplayed(),
                 "Main screen should appear after dismissing paywall");
     }
+
+    @Test(description = "Tapping ПРИГЛАСИТЬ opens the Invite screen")
+    public void tappingInviteOpensInvitePage() {
+        pages.InvitePage invite = paywall.tapInvite();
+        Assert.assertTrue(invite.isDisplayed(),
+                "Invite screen should appear after tapping ПРИГЛАСИТЬ on paywall");
+    }
 }
