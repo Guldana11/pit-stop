@@ -18,6 +18,7 @@ public class LanguageSelectionPage extends BasePage {
     private static final String BUTTON_KAZAKH_ID = PKG + ":id/buttonKazakh";
     private static final String TEXT_RUSSIAN_ID = PKG + ":id/tvTextRussianLanguage";
     private static final String TEXT_QAZAQ_ID = PKG + ":id/tvTextQazaqLanguage";
+    private static final String WARNING_LANGUAGE_ID = PKG + ":id/tvWarningLanguage";
 
     public enum Language {
         RUSSIAN(BUTTON_RUSSIAN_ID, "РУССКИЙ"),
@@ -68,10 +69,30 @@ public class LanguageSelectionPage extends BasePage {
         // ANR may have appeared on top after waitForDisplayed succeeded — dismiss it
         // before trying to click, otherwise the language buttons stay non-clickable.
         SystemDialogs.dismissAllAnrs(driver, 5);
+        clickLanguageButton(language);
+        // Kazakh translation is incomplete — after the first tap the app shows a warning
+        // (tvWarningLanguage) and keeps the same buttons on screen. Confirm by tapping again.
+        if (language == Language.KAZAKH && isWarningShown()) {
+            clickLanguageButton(language);
+        }
+    }
+
+    private void clickLanguageButton(Language language) {
         WebElement button = new WebDriverWait(driver, Duration.ofSeconds(30))
                 .ignoring(WebDriverException.class)
                 .until(ExpectedConditions.elementToBeClickable(AppiumBy.id(language.buttonId)));
         button.click();
+    }
+
+    private boolean isWarningShown() {
+        try {
+            new WebDriverWait(driver, Duration.ofSeconds(5))
+                    .ignoring(WebDriverException.class)
+                    .until(d -> !d.findElements(AppiumBy.id(WARNING_LANGUAGE_ID)).isEmpty());
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public String getButtonText(Language language) {

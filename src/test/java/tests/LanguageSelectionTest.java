@@ -67,4 +67,16 @@ public class LanguageSelectionTest extends BaseTest {
         Assert.assertTrue(mainScreen.isDisplayed(),
                 "Main screen should appear after selecting a language");
     }
+
+    @Test(description = "Selecting Kazakh opens the Main screen")
+    public void selectingKazakhOpensMainScreen() {
+        LanguageSelectionPage langPage = new LanguageSelectionPage(driver);
+        Assert.assertTrue(langPage.isDisplayed(), "Language screen should be visible before selecting");
+
+        langPage.selectLanguage(Language.KAZAKH);
+
+        MainScreenPage mainScreen = new MainScreenPage(driver);
+        Assert.assertTrue(mainScreen.isDisplayed(),
+                "Main screen should appear after selecting Kazakh");
+    }
 }
