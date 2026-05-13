@@ -21,6 +21,7 @@
             <class name="tests.RuleChapterPageTest"/>       <!-- экран содержимого главы ПДД 4 кейса -->
             <class name="tests.RulesSearchPageTest"/>       <!-- экран поиска по правилам 4 кейса -->
             <class name="tests.KazakhLocalizationTest"/>    <!-- казахская локализация 4 кейса -->
+            <class name="tests.BackNavigationTest"/>        <!-- BACK-навигация (cross-cutting) 5 кейсов -->
         </classes>
     </test>
 </suite>
