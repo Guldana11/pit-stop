@@ -80,4 +80,40 @@ public class SettingsTest extends BaseTest {
                     "Button should be enabled: " + btn.getAttribute("resource-id"));
         }
     }
+
+    @Test(description = "Tapping 'ВЫБЕРИТЕ ЯЗЫК' expands an inline language picker inside Settings")
+    public void tappingSelectLanguageExpandsInlinePicker() {
+        Assert.assertFalse(settings.isLanguagePickerExpanded(),
+                "Language picker should be collapsed before tapping");
+        settings.expandLanguagePicker();
+        Assert.assertTrue(settings.isLanguagePickerExpanded(),
+                "Inline language picker (ll_select_lng + btnRussian + btnKazakh) should appear after tap");
+        Assert.assertTrue(settings.inlineRussianButton().isEnabled(),
+                "Inline Russian button should be enabled");
+        Assert.assertTrue(settings.inlineKazakhButton().isEnabled(),
+                "Inline Kazakh button should be enabled");
+    }
+
+    @Test(description = "Tapping 'НЕ МОГУ ОПЛАТИТЬ...' launches an external app (browser intent)")
+    public void wantPayOtherLaunchesExternalApp() {
+        String ourPkg = "kz.crystalspring.pit_stop_kz";
+        settings.wantPayOtherButton().click();
+
+        // Поллим getCurrentPackage до 15 с — внешнее приложение запускается не мгновенно.
+        long deadline = System.currentTimeMillis() + 15_000;
+        String currentPkg = ourPkg;
+        while (System.currentTimeMillis() < deadline) {
+            currentPkg = driver.getCurrentPackage();
+            if (currentPkg != null && !currentPkg.equals(ourPkg)) break;
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
+            }
+        }
+        Assert.assertNotEquals(currentPkg, ourPkg,
+                "After tapping the button current package should leave '" + ourPkg
+                        + "' (external intent) but was '" + currentPkg + "'");
+    }
 }
