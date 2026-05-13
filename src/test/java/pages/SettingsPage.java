@@ -26,6 +26,12 @@ public class SettingsPage extends BasePage {
     public static final String BTN_FEEDBACK_ID = PKG + ":id/btnFeedback";
     public static final String BTN_SELECT_LANGUAGE_ID = PKG + ":id/btnSelectLanguage";
 
+    // Inline-блок выбора языка — раскрывается тапом на ВЫБЕРИТЕ ЯЗЫК прямо внутри Settings,
+    // НЕ ведёт на отдельный LanguageSelectionPage. Кнопки внутри имеют другие id (без префикса 'button').
+    public static final String LANGUAGE_PICKER_CONTAINER_ID = PKG + ":id/ll_select_lng";
+    public static final String INLINE_BTN_RUSSIAN_ID = PKG + ":id/btnRussian";
+    public static final String INLINE_BTN_KAZAKH_ID = PKG + ":id/btnKazakh";
+
     public SettingsPage(AppiumDriver driver) {
         super(driver);
     }
@@ -62,6 +68,31 @@ public class SettingsPage extends BasePage {
     public WebElement wantPayOtherButton() { return driver.findElement(AppiumBy.id(BTN_WANT_PAY_OTHER_ID)); }
     public WebElement feedbackButton()     { return driver.findElement(AppiumBy.id(BTN_FEEDBACK_ID)); }
     public WebElement selectLanguageButton() { return driver.findElement(AppiumBy.id(BTN_SELECT_LANGUAGE_ID)); }
+
+    /**
+     * Раскрывает inline-блок выбора языка прямо внутри Settings (НЕ открывает отдельный экран).
+     * Возвращает текущий SettingsPage для удобства цепочек.
+     */
+    public SettingsPage expandLanguagePicker() {
+        selectLanguageButton().click();
+        try {
+            new WebDriverWait(driver, Duration.ofSeconds(15))
+                    .ignoring(WebDriverException.class)
+                    .until(d -> !d.findElements(AppiumBy.id(LANGUAGE_PICKER_CONTAINER_ID)).isEmpty());
+        } catch (Exception ignored) {
+            // up to the caller — let assertion catch it
+        }
+        return this;
+    }
+
+    public boolean isLanguagePickerExpanded() {
+        return !driver.findElements(AppiumBy.id(LANGUAGE_PICKER_CONTAINER_ID)).isEmpty()
+                && !driver.findElements(AppiumBy.id(INLINE_BTN_RUSSIAN_ID)).isEmpty()
+                && !driver.findElements(AppiumBy.id(INLINE_BTN_KAZAKH_ID)).isEmpty();
+    }
+
+    public WebElement inlineRussianButton() { return driver.findElement(AppiumBy.id(INLINE_BTN_RUSSIAN_ID)); }
+    public WebElement inlineKazakhButton()  { return driver.findElement(AppiumBy.id(INLINE_BTN_KAZAKH_ID)); }
 
     public String getVersion() {
         return versionLabel().getText();
