@@ -61,6 +61,11 @@ public class InvitePage extends BasePage {
     public WebElement inviteButton()       { return driver.findElement(AppiumBy.id(BTN_INVITE_ID)); }
     public WebElement activatePromoButton() { return driver.findElement(AppiumBy.id(BTN_ACTIVATE_PROMO_ID)); }
 
+    public PromoCodeDialog tapActivatePromo() {
+        activatePromoButton().click();
+        return new PromoCodeDialog(driver);
+    }
+
     public String getInviteCode() {
         return inviteCodeLabel().getText();
     }

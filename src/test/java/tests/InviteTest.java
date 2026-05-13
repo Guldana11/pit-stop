@@ -4,10 +4,12 @@ import core.BaseTest;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import org.openqa.selenium.WebElement;
 import pages.InvitePage;
 import pages.LanguageSelectionPage;
 import pages.LanguageSelectionPage.Language;
 import pages.MainScreenPage;
+import pages.PromoCodeDialog;
 
 /**
  * Тесты экрана "Хочешь бесплатный доступ?" (открывается с главного по btnInviteFriend):
@@ -67,5 +69,73 @@ public class InviteTest extends BaseTest {
         Assert.assertTrue(invitePage.inviteButton().isEnabled(), "Invite button should be enabled");
         Assert.assertTrue(invitePage.activatePromoButton().isEnabled(),
                 "Activate promo button should be enabled");
+    }
+
+    @Test(description = "Tapping 'ПРИГЛАСИТЬ ДРУЗЕЙ' launches the system share resolver")
+    public void tappingInviteLaunchesShareIntent() {
+        String ourPkg = "kz.crystalspring.pit_stop_kz";
+        invitePage.inviteButton().click();
+
+        long deadline = System.currentTimeMillis() + 15_000;
+        String currentPkg = ourPkg;
+        while (System.currentTimeMillis() < deadline) {
+            currentPkg = driver.getCurrentPackage();
+            if (currentPkg != null && !currentPkg.equals(ourPkg)) break;
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
+            }
+        }
+        Assert.assertNotEquals(currentPkg, ourPkg,
+                "After tapping 'ПРИГЛАСИТЬ ДРУЗЕЙ' current package should leave '" + ourPkg
+                        + "' (share intent) but was '" + currentPkg + "'");
+    }
+
+    @Test(description = "Tapping 'АКТИВИРОВАТЬ ДРУГОЙ ПРОМО-КОД' opens the promo code dialog")
+    public void tappingActivatePromoOpensDialog() {
+        PromoCodeDialog dialog = invitePage.tapActivatePromo();
+        Assert.assertTrue(dialog.isShown(),
+                "Promo code dialog should appear after tapping 'АКТИВИРОВАТЬ ДРУГОЙ ПРОМО-КОД'");
+    }
+
+    @Test(description = "Promo code dialog has title, input field and two buttons with correct labels")
+    public void promoDialogHasInputAndButtons() {
+        PromoCodeDialog dialog = invitePage.tapActivatePromo();
+        Assert.assertTrue(dialog.isShown(), "Promo code dialog must be shown");
+
+        Assert.assertTrue(dialog.hasText(PromoCodeDialog.TITLE_TEXT),
+                "Dialog should show title '" + PromoCodeDialog.TITLE_TEXT + "'");
+        Assert.assertEquals(dialog.getInputHint(), PromoCodeDialog.INPUT_HINT,
+                "Input hint should be '" + PromoCodeDialog.INPUT_HINT + "'");
+
+        WebElement cancel = dialog.cancelButton();
+        WebElement submit = dialog.submitButton();
+        Assert.assertEquals(cancel.getText(), "ОТМЕНА");
+        Assert.assertEquals(submit.getText(), "ОТПРАВИТЬ");
+        Assert.assertTrue(cancel.isEnabled(), "Cancel button should be enabled");
+        Assert.assertTrue(submit.isEnabled(), "Submit button should be enabled");
+    }
+
+    @Test(description = "Typing a code into the dialog input stores the entered text")
+    public void canTypeCodeIntoDialog() {
+        PromoCodeDialog dialog = invitePage.tapActivatePromo();
+        Assert.assertTrue(dialog.isShown(), "Promo code dialog must be shown");
+
+        String code = "TEST123";
+        dialog.typeCode(code);
+        Assert.assertEquals(dialog.getInputText(), code,
+                "Input should contain the typed code '" + code + "'");
+    }
+
+    @Test(description = "Tapping ОТМЕНА on the promo dialog returns to the Invite screen")
+    public void tappingCancelOnPromoDialogReturnsToInvite() {
+        PromoCodeDialog dialog = invitePage.tapActivatePromo();
+        Assert.assertTrue(dialog.isShown(), "Promo code dialog must be shown");
+
+        InvitePage invite = dialog.tapCancel();
+        Assert.assertTrue(invite.isDisplayed(),
+                "Invite screen should appear after tapping ОТМЕНА on the promo dialog");
     }
 }
