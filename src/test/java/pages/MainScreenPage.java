@@ -92,6 +92,20 @@ public class MainScreenPage extends BasePage {
     }
 
     public WebElement pushMeButton()    { return driver.findElement(AppiumBy.id(BTN_PUSH_ME_ID)); }
+
+    public TestingPaywallDialog tapPushMe() {
+        pushMeButton().click();
+        return new TestingPaywallDialog(driver);
+    }
+
+    /**
+     * Второй тап на PushMe после того, как paywall уже был дисмиссен — открывает
+     * сразу экран вопроса теста, без выбора режима/сложности.
+     */
+    public QuestionPage tapPushMeExpectingQuestion() {
+        pushMeButton().click();
+        return new QuestionPage(driver);
+    }
     public WebElement questionsButton() { return driver.findElement(AppiumBy.id(BTN_QUESTIONS_ID)); }
 
     public TestingPaywallDialog tapQuestions() {

@@ -22,6 +22,8 @@
             <class name="tests.RulesSearchPageTest"/>       <!-- экран поиска по правилам 4 кейса -->
             <class name="tests.KazakhLocalizationTest"/>    <!-- казахская локализация 4 кейса -->
             <class name="tests.BackNavigationTest"/>        <!-- BACK-навигация (cross-cutting) 5 кейсов -->
+            <class name="tests.PushMeTest"/>                <!-- центральная кнопка PushMe 2 кейса -->
+            <class name="tests.QuestionPageTest"/>          <!-- экран вопроса теста 4 кейса -->
         </classes>
     </test>
 </suite>
