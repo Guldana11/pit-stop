@@ -7,16 +7,19 @@
     <test name="Android smoke">
         <classes>
             <class name="tests.SmokeTest"/>                 <!-- запуск приложения 1 кейс -->
-            <class name="tests.LanguageSelectionTest"/>     <!-- выбор языка (2 опции) 5 кейсов -->
+            <class name="tests.LanguageSelectionTest"/>     <!-- выбор языка (2 опции) 6 кейсов -->
             <class name="tests.MainScreenTest"/>            <!-- главный экран 4 кейса -->
-            <class name="tests.SettingsTest"/>              <!-- экран настроек 4 кейса -->
+            <class name="tests.SettingsTest"/>              <!-- экран настроек 6 кейсов -->
             <class name="tests.InviteTest"/>                <!-- экран "Хочешь бесплатный доступ?" 3 кейса -->
-            <class name="tests.RulesTest"/>                 <!-- экран "Правила" (ПДД) 4 кейса -->
-            <class name="tests.TestingPaywallTest"/>        <!-- paywall-диалог "Тестирование" 3 кейса -->
+            <class name="tests.RulesTest"/>                 <!-- экран "Правила" (ПДД) 6 кейсов -->
+            <class name="tests.TestingPaywallTest"/>        <!-- paywall-диалог "Тестирование" 4 кейса -->
             <class name="tests.TestingPageTest"/>           <!-- экран "Тестирование" 5 кейсов -->
             <class name="tests.AdvicesNotificationDialogTest"/> <!-- диалог промта "Советы" 4 кейса -->
             <class name="tests.AdvicesTest"/>               <!-- экран "Советы" 5 кейсов -->
             <class name="tests.ProfileTest"/>               <!-- экран "Профиль" 7 кейсов -->
+            <class name="tests.RuleChapterPageTest"/>       <!-- экран содержимого главы ПДД 4 кейса -->
+            <class name="tests.RulesSearchPageTest"/>       <!-- экран поиска по правилам 4 кейса -->
+            <class name="tests.KazakhLocalizationTest"/>    <!-- казахская локализация 4 кейса -->
         </classes>
     </test>
 </suite>

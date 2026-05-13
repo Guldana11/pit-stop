@@ -68,4 +68,25 @@ public class RulesTest extends BaseTest {
         Assert.assertTrue(rules.searchButton().isEnabled(),
                 "Search button should be enabled");
     }
+
+    @Test(description = "Tapping the ЗНАКИ tab makes it the selected one")
+    public void tappingSignsTabChangesSelection() {
+        rules.tapTab(RulesPage.TAB_SIGNS);
+        Assert.assertEquals(rules.getSelectedTab(), RulesPage.TAB_SIGNS,
+                "After tap, the 'ЗНАКИ' tab should be selected");
+    }
+
+    @Test(description = "Switching from ПДД РК to ЗНАКИ changes the list content")
+    public void tappingTabChangesContent() {
+        List<String> pddTitles = rules.getRuleTitles();
+        Assert.assertFalse(pddTitles.isEmpty(), "PDD tab should have rule titles");
+
+        rules.tapTab(RulesPage.TAB_SIGNS);
+        Assert.assertEquals(rules.getSelectedTab(), RulesPage.TAB_SIGNS,
+                "Tab should have switched to ЗНАКИ");
+
+        List<String> signTitles = rules.getRuleTitles();
+        Assert.assertNotEquals(signTitles, pddTitles,
+                "List content should change after switching tabs");
+    }
 }
