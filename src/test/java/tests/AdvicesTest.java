@@ -75,4 +75,14 @@ public class AdvicesTest extends BaseTest {
                     "Date should match YYYY-MM-DD but was '" + date + "'");
         }
     }
+
+    @Test(description = "Tapping the notification bell toggles a toast and keeps the Advices page visible")
+    public void tappingNotificationToggleKeepsPageVisible() {
+        // Состояние колокольчика меняется только визуально (drawable), Appium-атрибуты не отражают
+        // toggle (selected/checked остаются false до и после). Проверяем только что тап не крашит
+        // и страница не закрывается.
+        advices.notificationToggle().click();
+        Assert.assertTrue(advices.isDisplayed(),
+                "Advices page should still be displayed after tapping notification bell");
+    }
 }

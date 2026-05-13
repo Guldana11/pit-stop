@@ -92,4 +92,12 @@ public class AdvicesPage extends BasePage {
     public int getVisibleCardsCount() {
         return driver.findElements(AppiumBy.id(CARD_ID)).size();
     }
+
+    /**
+     * Тапает на первую карточку в списке советов — открывается экран статьи.
+     */
+    public ArticlePage tapFirstArticle() {
+        driver.findElements(AppiumBy.id(CARD_ID)).get(0).click();
+        return new ArticlePage(driver);
+    }
 }
