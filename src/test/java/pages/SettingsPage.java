@@ -65,6 +65,11 @@ public class SettingsPage extends BasePage {
     public WebElement rateAppButton()      { return driver.findElement(AppiumBy.id(BTN_RATE_APP_ID)); }
     public WebElement shareAppButton()     { return driver.findElement(AppiumBy.id(BTN_SHARE_APP_ID)); }
     public WebElement freeAccessButton()   { return driver.findElement(AppiumBy.id(BTN_FREE_ACCESS_ID)); }
+
+    public InvitePage tapFreeAccess() {
+        freeAccessButton().click();
+        return new InvitePage(driver);
+    }
     public WebElement wantPayOtherButton() { return driver.findElement(AppiumBy.id(BTN_WANT_PAY_OTHER_ID)); }
     public WebElement feedbackButton()     { return driver.findElement(AppiumBy.id(BTN_FEEDBACK_ID)); }
     public WebElement selectLanguageButton() { return driver.findElement(AppiumBy.id(BTN_SELECT_LANGUAGE_ID)); }
@@ -93,6 +98,20 @@ public class SettingsPage extends BasePage {
 
     public WebElement inlineRussianButton() { return driver.findElement(AppiumBy.id(INLINE_BTN_RUSSIAN_ID)); }
     public WebElement inlineKazakhButton()  { return driver.findElement(AppiumBy.id(INLINE_BTN_KAZAKH_ID)); }
+
+    /**
+     * Тап на inline-кнопку языка перезапускает приложение и возвращает на главный экран
+     * (уже в выбранной локали).
+     */
+    public MainScreenPage tapInlineKazakh() {
+        inlineKazakhButton().click();
+        return new MainScreenPage(driver);
+    }
+
+    public MainScreenPage tapInlineRussian() {
+        inlineRussianButton().click();
+        return new MainScreenPage(driver);
+    }
 
     public String getVersion() {
         return versionLabel().getText();
