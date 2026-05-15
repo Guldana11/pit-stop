@@ -73,9 +73,12 @@ public class KazakhLocalizationTest extends BaseTest {
         SettingsPage settings = main.tapSettings();
         Assert.assertTrue(settings.isDisplayed(), "Settings should open from main screen");
 
-        Assert.assertTrue(settings.hasText("ҚР ЖҚЕ"),
-                "Settings description should mention 'ҚР ЖҚЕ' (Kazakh abbreviation for ПДД РК)");
-        Assert.assertFalse(settings.hasText("Актуальный справочник по ПДД РК"),
+        // UiAutomator-селектор плохо переваривает казахскую букву Қ (U+049A) в textContains.
+        // Проверяем по page source напрямую — там русские/казахские строки лежат как есть.
+        String pageSource = driver.getPageSource();
+        Assert.assertTrue(pageSource.contains("ҚР ЖҚЕ"),
+                "Settings page source should mention 'ҚР ЖҚЕ' (Kazakh abbreviation for ПДД РК)");
+        Assert.assertFalse(pageSource.contains("Актуальный справочник по ПДД РК"),
                 "Settings should NOT show the Russian description text");
     }
 }

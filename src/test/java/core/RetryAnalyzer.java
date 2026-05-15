@@ -4,13 +4,16 @@ import org.testng.IRetryAnalyzer;
 import org.testng.ITestResult;
 
 /**
- * Retries failed tests once. Compensates for flaky setUp on a slow Android emulator
- * where the splash sometimes takes longer than expected. Don't bump above 1 retry —
- * that hides real bugs instead of just smoothing infrastructure noise.
+ * Retries failed tests up to twice. Compensates for flaky setUp on a slow x86_64 Android
+ * emulator: observed failure modes are "Failed to create Android driver" (UiAutomator2
+ * server dies mid-suite) and "Language selection screen did not appear within 60s" (cold
+ * cache after fullReset). One retry wasn't enough — driver creation can fail twice in a
+ * row when the emulator is stressed. Two retries lets us ride through these without
+ * masking real bugs, since a real bug would fail consistently across all attempts.
  */
 public class RetryAnalyzer implements IRetryAnalyzer {
 
-    private static final int MAX_RETRY_COUNT = 1;
+    private static final int MAX_RETRY_COUNT = 2;
     private int currentRetry = 0;
 
     @Override

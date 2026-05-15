@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Android Suite (Part 2: Testing flow + Advices + heavy screens)" verbose="1">
+    <listeners>
+        <listener class-name="core.RetryListener"/>
+    </listeners>
+    <test name="Android part 2">
+        <classes>
+            <class name="tests.TestingPaywallTest"/>        <!-- paywall-диалог "Тестирование" 4 кейса -->
+            <class name="tests.TestingPageTest"/>           <!-- экран "Тестирование" 5 кейсов -->
+            <class name="tests.AdvicesNotificationDialogTest"/> <!-- диалог промта "Советы" 4 кейса -->
+            <class name="tests.AdvicesTest"/>               <!-- экран "Советы" 6 кейсов -->
+            <class name="tests.ArticlePageTest"/>           <!-- экран статьи 5 кейсов -->
+            <class name="tests.PushMeTest"/>                <!-- центральная кнопка PushMe 2 кейса -->
+            <class name="tests.QuestionPageTest"/>          <!-- экран вопроса теста 4 кейса -->
+        </classes>
+    </test>
+</suite>

@@ -45,11 +45,9 @@ val cleanOldArtifacts by tasks.registering {
     }
 }
 
-tasks.test {
+// Стандартные настройки, общие для всех Test-тасок (полный прогон и сплит на 2 части).
+fun org.gradle.api.tasks.testing.Test.applyStandardSetup() {
     dependsOn(cleanOldArtifacts)
-    useTestNG {
-        suiteXmlFiles = listOf(file("src/test/resources/suites/android.xml"))
-    }
     systemProperties = System.getProperties()
         .entries
         .associate { it.key.toString() to it.value }
@@ -59,5 +57,49 @@ tasks.test {
         showStandardStreams = true
         showExceptions = true
         exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+    }
+}
+
+// Полный прогон (~2 часа). На длинной дистанции UiAutomator2 имеет тенденцию падать —
+// если устойчивость важнее покрытия, используй testPart1 / testPart2 с холодным
+// ребутом эмулятора между ними.
+tasks.test {
+    applyStandardSetup()
+    useTestNG {
+        suiteXmlFiles = listOf(file("src/test/resources/suites/android.xml"))
+    }
+}
+
+// Часть 1A: фундаментальные флоу + Settings + Profile + Kazakh.
+// ~25 минут, 34 кейса.
+tasks.register<Test>("testPart1a") {
+    description = "Foundational + Settings + Profile + Kazakh (~25 min, 34 cases)"
+    group = "verification"
+    applyStandardSetup()
+    useTestNG {
+        suiteXmlFiles = listOf(file("src/test/resources/suites/androidPart1a.xml"))
+    }
+}
+
+// Часть 1B: Invite + Rules-флоу + BACK-навигация.
+// ~20 минут, 27 кейсов.
+tasks.register<Test>("testPart1b") {
+    description = "Invite + Rules flow + BACK navigation (~20 min, 27 cases)"
+    group = "verification"
+    applyStandardSetup()
+    useTestNG {
+        suiteXmlFiles = listOf(file("src/test/resources/suites/androidPart1b.xml"))
+    }
+}
+
+// Часть 2: Testing-флоу + Советы + тяжёлые экраны (Article, Question).
+// ~25-30 минут, 30 кейсов, больше ANR — рекомендуется холодный ребут эмулятора
+// между каждой парой частей (1A → 1B → 2).
+tasks.register<Test>("testPart2") {
+    description = "Testing flow + Advices + heavy screens (~30 min, 30 cases)"
+    group = "verification"
+    applyStandardSetup()
+    useTestNG {
+        suiteXmlFiles = listOf(file("src/test/resources/suites/androidPart2.xml"))
     }
 }

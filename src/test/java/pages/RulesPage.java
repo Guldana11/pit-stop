@@ -102,8 +102,16 @@ public class RulesPage extends BasePage {
     }
 
     public RuleChapterPage tapChapter(String title) {
+        // ListView с главами рендерится после загрузки экрана Rules — ждём появления
+        // конкретной главы до 30с, иначе на холодном кэше findElement упадёт раньше времени.
         String selector = String.format("new UiSelector().text(\"%s\")", title);
-        driver.findElement(AppiumBy.androidUIAutomator(selector)).click();
+        WebElement chapter = new WebDriverWait(driver, Duration.ofSeconds(30))
+                .ignoring(WebDriverException.class)
+                .until(d -> {
+                    var found = d.findElements(AppiumBy.androidUIAutomator(selector));
+                    return found.isEmpty() ? null : found.get(0);
+                });
+        chapter.click();
         return new RuleChapterPage(driver);
     }
 

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Android Suite (Part 1B: Invite + Rules + BACK)" verbose="1">
+    <listeners>
+        <listener class-name="core.RetryListener"/>
+    </listeners>
+    <test name="Android part 1B">
+        <classes>
+            <class name="tests.InviteTest"/>                <!-- экран "Хочешь бесплатный доступ?" 8 кейсов -->
+            <class name="tests.RulesTest"/>                 <!-- экран "Правила" (ПДД) 6 кейсов -->
+            <class name="tests.RuleChapterPageTest"/>       <!-- экран содержимого главы ПДД 4 кейса -->
+            <class name="tests.RulesSearchPageTest"/>       <!-- экран поиска по правилам 4 кейса -->
+            <class name="tests.BackNavigationTest"/>        <!-- BACK-навигация (cross-cutting) 5 кейсов -->
+        </classes>
+    </test>
+</suite>
