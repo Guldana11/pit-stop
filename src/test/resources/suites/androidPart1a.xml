@@ -10,7 +10,7 @@
             <class name="tests.LanguageSelectionTest"/>     <!-- выбор языка (2 опции) 6 кейсов -->
             <class name="tests.MainScreenTest"/>            <!-- главный экран 4 кейса -->
             <class name="tests.SettingsTest"/>              <!-- экран настроек 12 кейсов -->
-            <class name="tests.ProfileTest"/>               <!-- экран "Профиль" 7 кейсов -->
+            <class name="tests.ProfileTest"/>               <!-- экран "Профиль" 11 кейсов (вкл. 3 edge + happy save) -->
             <class name="tests.KazakhLocalizationTest"/>    <!-- казахская локализация 4 кейса -->
         </classes>
     </test>

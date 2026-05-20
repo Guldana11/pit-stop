@@ -3,6 +3,7 @@ package pages;
 import core.SystemDialogs;
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.android.AndroidDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -77,6 +78,33 @@ public class ProfilePage extends BasePage {
     public WebElement wantFreeCheckbox()      { return driver.findElement(AppiumBy.id(CHK_WANT_FREE_ID)); }
 
     public WebElement saveButton() { return driver.findElement(AppiumBy.id(BTN_SAVE_ID)); }
+
+    /**
+     * Тап на СОХРАНИТЬ с предварительным скрытием клавиатуры. После ввода в любое поле
+     * IME перекрывает кнопку Save снизу, и обычный click() валится с NoSuchElement.
+     */
+    public void tapSave() {
+        hideKeyboard();
+        saveButton().click();
+    }
+
+    /**
+     * Заполняет поле текстом — сначала скрывает IME, чтобы поле не было перекрыто
+     * клавиатурой от ввода в предыдущее. Принимает WebElement как у геттеров выше.
+     */
+    public void fillInput(WebElement input, String value) {
+        hideKeyboard();
+        input.click();
+        input.sendKeys(value);
+    }
+
+    private void hideKeyboard() {
+        try {
+            ((AndroidDriver) driver).hideKeyboard();
+        } catch (Exception ignored) {
+            // клавиатура могла быть не открыта — это норма
+        }
+    }
 
     public boolean hasText(String text) {
         String selector = String.format("new UiSelector().textContains(\"%s\")", text);

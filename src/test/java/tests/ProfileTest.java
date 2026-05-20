@@ -103,4 +103,66 @@ public class ProfileTest extends BaseTest {
         Assert.assertEquals(chk.getAttribute("checked"), "true",
                 "Checkbox should be checked after the tap");
     }
+
+    // -------- Edge cases: form validation (currently NONE on client side) --------
+
+    @Test(description = "[edge] Saving an empty form does not show validation — stays on Profile")
+    public void savingEmptyFormStaysOnProfile() {
+        // Документирует текущее поведение: клиентской валидации нет, тап на СОХРАНИТЬ
+        // без заполнения полей не показывает ошибку и оставляет нас на том же экране.
+        // Если разработчик добавит required-валидацию — этот тест упадёт и обратит внимание.
+        profile.tapSave();
+        Assert.assertTrue(profile.isDisplayed(),
+                "After saving empty form, should stay on Profile (no client-side validation today)");
+    }
+
+    @Test(description = "[edge] Saving with an invalid email format does not show validation")
+    public void savingInvalidEmailStaysOnProfile() {
+        WebElement email = profile.emailInput();
+        email.click();
+        email.sendKeys("not-an-email");
+        profile.tapSave();
+        Assert.assertTrue(profile.isDisplayed(),
+                "Saving 'not-an-email' should stay on Profile — no email format validation today");
+    }
+
+    @Test(description = "[edge] After save, entered field values are preserved on Profile")
+    public void savingPreservesFieldValues() {
+        WebElement nickname = profile.nicknameInput();
+        nickname.click();
+        nickname.sendKeys("TestNick");
+
+        profile.tapSave();
+        Assert.assertTrue(profile.isDisplayed(), "Should stay on Profile after save");
+
+        Assert.assertEquals(profile.nicknameInput().getText(), "TestNick",
+                "Nickname value should still be in the input after save (form doesn't clear)");
+    }
+
+    @Test(description = "Happy path: filling valid data, tapping СОХРАНИТЬ keeps all values on Profile")
+    public void savingValidDataKeepsItOnScreen() {
+        // Заполняем 4 текстовых поля + один чекбокс. etBirthday/etSex пропускаем —
+        // они открывают date-picker / spinner, обычным sendKeys не заполнить.
+        // fillInput скрывает IME перед каждым вводом — иначе клавиатура от phone/email
+        // перекрывает поле city и тап по нему упадёт с NoSuchElement.
+        profile.fillInput(profile.nicknameInput(), "ValidUser");
+        profile.fillInput(profile.phoneInput(), "77011234567");
+        profile.fillInput(profile.emailInput(), "test@test.kz");
+        profile.fillInput(profile.cityInput(), "Алматы");
+
+        profile.hasAutomobileCheckbox().click();
+
+        profile.tapSave();
+        Assert.assertTrue(profile.isDisplayed(),
+                "Should stay on Profile after saving valid data");
+
+        Assert.assertEquals(profile.nicknameInput().getText(), "ValidUser",
+                "Nickname value should be preserved after save");
+        Assert.assertEquals(profile.emailInput().getText(), "test@test.kz",
+                "Email value should be preserved after save");
+        Assert.assertEquals(profile.cityInput().getText(), "Алматы",
+                "City value should be preserved after save");
+        Assert.assertEquals(profile.hasAutomobileCheckbox().getAttribute("checked"), "true",
+                "'У вас есть автомобиль?' checkbox should remain checked");
+    }
 }

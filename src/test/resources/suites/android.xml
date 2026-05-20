@@ -17,7 +17,7 @@
             <class name="tests.AdvicesNotificationDialogTest"/> <!-- диалог промта "Советы" 4 кейса -->
             <class name="tests.AdvicesTest"/>               <!-- экран "Советы" 6 кейсов -->
             <class name="tests.ArticlePageTest"/>           <!-- экран статьи 5 кейсов -->
-            <class name="tests.ProfileTest"/>               <!-- экран "Профиль" 7 кейсов -->
+            <class name="tests.ProfileTest"/>               <!-- экран "Профиль" 11 кейсов (вкл. 3 edge + happy save) -->
             <class name="tests.RuleChapterPageTest"/>       <!-- экран содержимого главы ПДД 4 кейса -->
             <class name="tests.RulesSearchPageTest"/>       <!-- экран поиска по правилам 4 кейса -->
             <class name="tests.KazakhLocalizationTest"/>    <!-- казахская локализация 4 кейса -->
